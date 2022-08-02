@@ -541,12 +541,26 @@ async def tn1(msg:Message):
                 # await msg.reply(f'{msg}')
 
 ####################bing每日壁纸#####################
-# import bing_today
-# @bot.command(name='today_bing')
-# async def tb1(msg:Message):
-#     result = await bing_today.get_bing_everyday_pic()
-#     await msg.ctx.channel.send(result[0],type=MessageTypes.IMG)
-#     await msg.ctx.channel.send(f'{result[1]}  {result[2]}')
+import bing_today
+@bot.command(name='today_bing')
+async def tb1(msg:Message):
+    img_url,copyright_text,copyright_url = await bing_today.get_bing_everyday_pic()
+    cm = CardMessage()
+    c1 = Card(Module.Header('必应每日壁纸'),color='1fff7e')
+    # c1.append(Module.Divider)
+    """ c1.append(Module.Section(f'必应今日壁纸:{copyright_text}', Element.Button(
+        'This way', f'{img_url}', Types.Click.LINK, theme=Types.Theme.INFO), RIGHT)) """
+    # c3 = Card(Module.Context(f'{copyright_url}'),color='e87d3a')
+    c2 = Card(Module.Section(f'必应今日壁纸:\n {copyright_text}', Element.Button(
+        'This way', img_url, Types.Click.LINK, theme=Types.Theme.INFO), RIGHT),color='e87d3a')
+    c3 = Card(Module.Context(f'copyright_url: \n {copyright_url}'),color='ba9af0')
+    cm.append(c1)
+    cm.append(c2)
+    cm.append(c3)
+    await msg.ctx.channel.send(cm)
+
+
+
 
 
 

@@ -13,6 +13,7 @@ import logging
 from khl.command import *
 from datetime import datetime
 from khl.card import *
+from matplotlib import container
 from sympy import Mod
 import aiohttp
 from translate import *
@@ -29,6 +30,12 @@ Botoken = config['token']
 
 """ # prefix 修改
 bot.command.update_prefixes('-') """
+
+#########机器人启动状态修改################
+@bot.task.add_date()
+async def startup_tasks():
+    print('启动...')
+    await bot.update_listening_music('WORKING NOW','on99','cloudmusic')
 
 # 当前游戏状态修改
 @bot.command(name='fake_start_game')
@@ -554,9 +561,12 @@ async def tb1(msg:Message):
     c2 = Card(Module.Section(f'必应今日壁纸:\n {copyright_text}', Element.Button(
         'This way', img_url, Types.Click.LINK, theme=Types.Theme.INFO), RIGHT),color='e87d3a')
     c3 = Card(Module.Context(f'copyright_url: \n {copyright_url}'),color='ba9af0')
+    c4 = Card(Module.File(Types.File.AUDIO, "http://music.163.com/song/media/outer/url?id=454231783.mp3",
+              title='Beneath the Mask -rain-', cover='http://p2.music.126.net/FmuZirfGmg9FbMy3hkEqAA==/109951165567176149.jpg?param=130y130'),color='ed173e')
     cm.append(c1)
     cm.append(c2)
     cm.append(c3)
+    cm.append(c4)
     await msg.ctx.channel.send(cm)
 
 

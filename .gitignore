@@ -3,3 +3,4 @@ config/translate.json
 __pycache__/bing_today.cpython-39.pyc
 __pycache__/translate.cpython-39.pyc
 __pycache__/weather.cpython-39.pyc
+__pycache__/hex_random_color.cpython-39.pyc

@@ -5,6 +5,7 @@ from pickle import NONE
 from tkinter import RIGHT
 from tokenize import Ignore
 from turtle import right
+from typing import Type
 from unittest import async_case, result
 from wsgiref import headers
 from khl import *
@@ -14,9 +15,11 @@ from khl.command import *
 from datetime import datetime
 from khl.card import *
 from matplotlib import container
-from sympy import Mod
+from sqlalchemy import true
+from sympy import RR, Mod
 import aiohttp
 from translate import *
+import hex_random_color
 
 
 with open('D:\\code\\kookbot\\kook_bot\\config\\config.json', 'r', encoding='utf-8') as f:
@@ -427,8 +430,95 @@ async def SGAI(msg:Message):
     async with aiohttp.ClientSession() as session:
         async with session.get(url,params=params,headers=headers) as response:
             sgai_res = await response.text()
-            print(sgai_res)
-            return """ json.loads(sgai_res) """
+            print(type(sgai_res))
+            info_to_json =json.loads(sgai_res)
+            print(type(info_to_json))
+            get_a_id =info_to_json['data']['items']
+            for u in get_a_id:
+                print(u)
+            return get_a_id
+
+async def SGAI2(msg:Message):
+    if msg.author_id != master_id :
+        return
+    url = "https://www.kookapp.cn/api/v3/guild/user-list"
+    headers = {f'Authorization': f"Bot {Botoken}"}
+    the_guild_id=config['the_guild_id']
+    params = {"guild_id":the_guild_id}
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url,params=params,headers=headers) as response:
+            sgai_res = await response.text()
+            # print(type(sgai_res))
+            info_to_json =json.loads(sgai_res)
+            # print(type(info_to_json))
+            get_a_id =info_to_json['data']['items']
+            """ for u in get_a_id:
+                print(u) """
+            return get_a_id
+
+@bot.command(name='get')
+async def gettttter(msg:Message,men_str:str):
+    if msg.author_id != master_id :
+        return
+    id_dict = await SGAI2(msg)
+    stwqtr = men_str
+    result = re.match( '\(met\)(\d+?)\(met\)' , stwqtr)
+    # print(result)
+    # print(result.group(1))
+    if result is None:
+        await msg.reply('未检测到@行为')
+        return
+    finallllll_result = result.group(1)
+    for u in id_dict:
+        if u['id'] == finallllll_result:
+            glo_u = u
+            break
+    cm = CardMessage()
+    c1 = Card(Module.Header('LIST'),color=(await hex_random_color.get_random_hex_color()))
+    c1.append(Module.Divider())
+    str_id = "(spl){}(spl)".format(str(glo_u['id']))
+    role_all_ids_1 = 0
+    for role_all_id in glo_u['roles']:
+        role_all_ids_1 |= role_all_id
+    role_f_all_ids = bin(role_all_ids_1)[2:]
+    color_tmp_id = hex(glo_u['color'])[2:]
+    color_id1 = color_tmp_id.zfill(6)
+    joined_at = glo_u['joined_at']
+    active_time = glo_u['active_time']
+    when_join = datetime.fromtimestamp(int(joined_at) / 1000)
+    last_active_1 = datetime.fromtimestamp(int(active_time) / 1000)
+    c1.append(Module.Section(Element.Text(f"🆔::\t{str_id}\nUsername::\t{glo_u['username']}\nNickname::\t{glo_u['nickname']}\nSuffix::\t{glo_u['identify_num']}\nAuthority::\t{role_f_all_ids}\nRole Color::\t{color_id1}\nLast active::\t{last_active_1}\nWhen joined::\t{when_join}",Types.Text.KMD)))
+    cm.append(c1)
+    online_pd_true = '🟢'
+    online_pd_false = '🔴'
+    bot_pd_true = '🤖'
+    bot_pd_false = '😀'
+    c2 = Card(Module.Header('Status'),color=(await hex_random_color.get_random_hex_color()))
+    c2.append(Module.Divider())
+    c2.append(Module.Section(Element.Text(f"Online status ==> {online_pd_true if glo_u['online'] else online_pd_false}\nKind ==> {bot_pd_true if glo_u['bot'] else bot_pd_false}\nMobile_verified ==> {online_pd_true if glo_u['mobile_verified'] else online_pd_false}\nIs_master ==> {online_pd_true if glo_u['is_master'] else online_pd_false}",Types.Text.KMD)))
+    cm.append(c2)
+    c3 = Card(Module.Header('Other Messages'),color=(await hex_random_color.get_random_hex_color()))
+    banner_pd = False
+    # if len(glo_u['avatar']) > 0:
+    #     c3.append(Module.Context('Avatar\t'))
+    #     c3.append(Module.Divider())
+    #     c3.append(Module.ImageGroup(Element.Image(src=glo_u['avatar'],size='mg')))
+    #     c3.append(Module.Divider())
+    if len(glo_u['banner']) > 0 :
+        # c3.append(Module.Context('Banner\t'))
+        # c3.append(Module.Divider())
+        # c3.append(Module.ImageGroup(Element.Image(src=glo_u['banner'],size='lg')))
+        banner_pd = True
+        # c3.append(Module.Divider())
+    if banner_pd:
+        c3.append(Module.ImageGroup(Element.Image(src=glo_u['banner'],size=Types.Size.LG),Element.Image(src=glo_u['avatar'],size=Types.Size.SM))) 
+    else:
+        c3.append(Module.ImageGroup(Element.Image(src=glo_u['avatar'],size=Types.Size.SM))) 
+    c3.append(Module.Divider())
+    c3.append(Module.Context('banner and avatar'))
+    cm.append(c3)
+    await msg.reply(cm)
+
 
 #开黑啦的时间串的转换
 import re

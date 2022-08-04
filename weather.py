@@ -1,5 +1,6 @@
 import aiohttp
 import json
+# import asyncio
 
 with open("D:\\code\\kookbot\\kook_bot\\config\\config.json", 'r', encoding='utf-8') as f:
     config = json.load(f)
@@ -15,3 +16,6 @@ async def ohweather():
             # print(json.loads(await response.text())['translation'][1:-1]," !    !!!!!")
             print("!weather debug:!   ",json.loads(await response.text()))
             return json.loads(await response.text())
+
+# loop = asyncio.get_event_loop()
+# loop.run_until_complete(ohweather())

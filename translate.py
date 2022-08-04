@@ -1,6 +1,5 @@
 import json
 import aiohttp
-from sympy import im, re
 import urllib.request
 import urllib.parse
 import uuid

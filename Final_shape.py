@@ -1,5 +1,8 @@
+import bing_today
+from weather import *
+import random
+import re
 from ast import Await
-from email import header
 from pickle import NONE
 #from asyncio import FastChildWatcher
 from tkinter import RIGHT
@@ -38,12 +41,12 @@ bot.command.update_prefixes('-') """
 @bot.task.add_date()
 async def startup_tasks():
     print('启动...')
-    await bot.update_listening_music('WORKING NOW','on99','cloudmusic')
+    await bot.update_listening_music('WORKING NOW', 'on99', 'cloudmusic')
 
 # 当前游戏状态修改
 @bot.command(name='fake_start_game')
-async def fsg(msg:Message):
-    if msg.author_id != master_id :
+async def fsg(msg: Message):
+    if msg.author_id != master_id:
         return
     games = await bot.list_game()
     the_game = str(config['diy_game_o'])
@@ -54,8 +57,8 @@ async def fsg(msg:Message):
 
 # 删除游戏状态
 @bot.command(name='fake_stop_game')
-async def status_delete(msg:Message,d: int):
-    if msg.author_id != master_id :
+async def status_delete(msg: Message, d: int):
+    if msg.author_id != master_id:
         return
     url = "https://www.kookapp.cn/api/v3/game/delete-activity"
     headers = {f'Authorization': f"Bot {Botoken}"}
@@ -66,30 +69,32 @@ async def status_delete(msg:Message,d: int):
 """ async def fstopg():
     await bot.stop_playing_game() """
 
+
 @bot.command(name='fake_stop_game_1')
-async def fake_De(msg:Message):
-    if msg.author_id != master_id :
+async def fake_De(msg: Message):
+    if msg.author_id != master_id:
         return
     await bot.stop_playing_game()
 
 
 # 歌曲状态修改
 @bot.command(name='fake_start_song')
-async def fss(msg:Message):
-    if msg.author_id != master_id :
+async def fss(msg: Message):
+    if msg.author_id != master_id:
         return
     await bot.update_listening_music('Now Not Home', 'on99', 'qqmusic')
 
 # 歌曲状态停止
 @bot.command(name='fake_stop_song')
-async def fstopsong(msg:Message):
-    if msg.author_id != master_id :
+async def fstopsong(msg: Message):
+    if msg.author_id != master_id:
         return
     await bot.stop_listening_music()
 
 # /hello
 @bot.command(name='hello')
 async def hello_reply(msg: Message):
+    print(re.__file__)
     await msg.ctx.channel.send('hi! nice to see Ya!')
 
 # hi#
@@ -123,11 +128,11 @@ async def check(msg:Message, comment:str):
         await msg.reply(f'you can input the sentences after /check like \'/check fuckyou\' please don\'t input the space in the sentences')
     else:
         await msg.reply(f'嘿！ \" {comment} \" 这句话有敏感词哦') """
-#################################################################
+################################################################
+
+
 ######################
 # 删除消息检测 或是说撤回检测
-
-
 @bot.on_event(EventTypes.DELETED_MESSAGE)
 async def delete_catcher_on99(b: Bot, event: Event):
     print("detect delete!")
@@ -141,7 +146,8 @@ async def delete_catcher_on99(b: Bot, event: Event):
     cm = CardMessage()
     c1 = Card(Module.Header('被删除信息汇总'), color='7c00ff')
     c1.append(Module.Divider())
-    c1.append(Module.Section(Element.Text(f'::内容::\n {event.body["content"]}',Types.Text.KMD)))
+    c1.append(Module.Section(Element.Text(
+        f'::内容::\n {event.body["content"]}', Types.Text.KMD)))
     c1.append(Module.Divider())
     c1.append(Module.Context(f'::消息原频道::\n {event.body["channel_id"]}'))
     c1.append(Module.Divider())
@@ -205,9 +211,8 @@ async def card(msg: Message):
     cm = CardMessage(c)  # Card can not be sent directly, need to wrapped with a CardMessage
     await msg.reply(cm) """
 
+
 # 正则测试 是否能跳过prefix  测试结果：能
-
-
 @bot.command(regex='^(helpme)$')
 async def help19(msg: Message, *args):
     print(*args)
@@ -229,13 +234,13 @@ async def help19(msg: Message, *args):
     cm.append(c1)
 
 
-#22222222222222222222222222222222222222222222222222222222222222222222
+# 22222222222222222222222222222222222222222222222222222222222222222222
     c2 = Card(Module.Header('详细'), color='76FF00')
     c2.append(Module.Divider())
     c2.append(Module.ActionGroup(
         Element.Button('/hello', '/hello',
                        Types.Click.RETURN_VAL, Types.Theme.INFO),
-        Element.Button('/roll','/roll 最小值 最大值 roll的个数(默认为1)',
+        Element.Button('/roll', '/roll 最小值 最大值 roll的个数(默认为1)',
                        Types.Click.RETURN_VAL, Types.Theme.SUCCESS)
     ))
     c2.append(Module.Divider())
@@ -288,9 +293,10 @@ async def yes(msg: Message, mention_str: str):
     print(mention_str)
     await msg.reply(f'为什么你要{mention_str}') """
 
+
 afk_status_check = False
 #正则检测 某个人被@ \(met\)#######↓这串数字是我的id也就是我上面设定的master_id########################
-@bot.command(regex='(.*)\(met\)3917643868\(met\)(.*)')
+@bot.command(regex=f'(.*)\(met\){master_id}\(met\)(.*)')
 async def checkYat9(msg: Message, *args):
     print(*args)
     if afk_status_check:
@@ -299,53 +305,57 @@ async def checkYat9(msg: Message, *args):
 
 # 上面的开关
 @bot.command(name='AFKON')
-async def afk_on(msg:Message):
-    if msg.author_id != master_id :
+async def afk_on(msg: Message):
+    if msg.author_id != master_id:
         return
     global afk_status_check
     afk_status_check = True
 
 
 @bot.command(name='AFKOFF')
-async def afk_on(msg:Message):
-    if msg.author_id != master_id :
+async def afk_on(msg: Message):
+    if msg.author_id != master_id:
         return
     global afk_status_check
     afk_status_check = False
 #######################################
 
+
 ####################翻译#####################
-async def translate(msg:Message,*args):
-    print("arg: ",args)
+async def translate(msg: Message, *args):
+    print("arg: ", args)
     word = " ".join(args)
-    print("word: ",word)
+    print("word: ", word)
     cm = CardMessage()
     if is_CN(word):
-        c1 = Card(Module.Section(Element.Text(f"**翻译结果:** {await caiyunTL(word,'auto2en')}",Types.Text.KMD)),Module.Context('来自：彩云小译，翻译成英文'))
-    else :
-        c1 = Card(Module.Section(Element.Text(f"**翻译结果:** {await caiyunTL(word,'auto2zh')}",Types.Text.KMD)),Module.Context('来自：彩云小译，翻译成中文'))
+        c1 = Card(Module.Section(Element.Text(f"**翻译结果:** {await caiyunTL(word,'auto2en')}", Types.Text.KMD)), Module.Context('来自：彩云小译，翻译成英文'))
+    else:
+        c1 = Card(Module.Section(Element.Text(f"**翻译结果:** {await caiyunTL(word,'auto2zh')}", Types.Text.KMD)), Module.Context('来自：彩云小译，翻译成中文'))
 
     cm.append(c1)
     await msg.reply(cm)
 
-@bot.command(name='TL',aliases=['tl','translate','翻译'])#aliases是别名的意思
-async def translate1(msg:Message,*args):
-    await translate(msg,' '.join(args))
+
+@bot.command(name='TL', aliases=['tl', 'translate', '翻译'])  # aliases是别名的意思
+async def translate1(msg: Message, *args):
+    await translate(msg, ' '.join(args))
+
 
 ########################有道##########################
-async def translate_youdao(msg:Message,*args):
-    print("arg: ",args)
+async def translate_youdao(msg: Message, *args):
+    print("arg: ", args)
     word = " ".join(args)
-    print("word: ",word)
+    print("word: ", word)
     cm = CardMessage()
-    c1 = Card(Module.Section(Element.Text(f"**翻译结果:** {await youdaoTL(word,'zh-CHS')}",Types.Text.KMD)),Module.Context('来自：有道翻译自动检测 中文和英文以外的不确定'))
+    c1 = Card(Module.Section(Element.Text(f"**翻译结果:** {await youdaoTL(word,'zh-CHS')}", Types.Text.KMD)), Module.Context('来自：有道翻译自动检测 中文和英文以外的不确定'))
 
     cm.append(c1)
     await msg.reply(cm)
 
+
 @bot.command(name='youdao')
-async def translate_2(msg:Message,*args):
-    await translate_youdao(msg,' '.join(args))
+async def translate_2(msg: Message, *args):
+    await translate_youdao(msg, ' '.join(args))
 
 
 """ #实时翻译栏位
@@ -418,51 +428,52 @@ async def TLOFF(msg: Message):
  """
 
 ##########################################
-
 @bot.command(name='ser_get_all_info')
-async def SGAI(msg:Message):
-    if msg.author_id != master_id :
+async def SGAI(msg: Message):
+    if msg.author_id != master_id:
         return
     url = "https://www.kookapp.cn/api/v3/guild/user-list"
     headers = {f'Authorization': f"Bot {Botoken}"}
-    the_guild_id=config['the_guild_id']
-    params = {"guild_id":the_guild_id}
+    the_guild_id = config['the_guild_id']
+    params = {"guild_id": the_guild_id}
     async with aiohttp.ClientSession() as session:
-        async with session.get(url,params=params,headers=headers) as response:
+        async with session.get(url, params=params, headers=headers) as response:
             sgai_res = await response.text()
             print(type(sgai_res))
-            info_to_json =json.loads(sgai_res)
+            info_to_json = json.loads(sgai_res)
             print(type(info_to_json))
-            get_a_id =info_to_json['data']['items']
+            get_a_id = info_to_json['data']['items']
             for u in get_a_id:
                 print(u)
             return get_a_id
 
-async def SGAI2(msg:Message):
-    if msg.author_id != master_id :
+
+async def SGAI2(msg: Message):
+    if msg.author_id != master_id:
         return
     url = "https://www.kookapp.cn/api/v3/guild/user-list"
     headers = {f'Authorization': f"Bot {Botoken}"}
-    the_guild_id=config['the_guild_id']
-    params = {"guild_id":the_guild_id}
+    the_guild_id = config['the_guild_id']
+    params = {"guild_id": the_guild_id}
     async with aiohttp.ClientSession() as session:
-        async with session.get(url,params=params,headers=headers) as response:
+        async with session.get(url, params=params, headers=headers) as response:
             sgai_res = await response.text()
             # print(type(sgai_res))
-            info_to_json =json.loads(sgai_res)
+            info_to_json = json.loads(sgai_res)
             # print(type(info_to_json))
-            get_a_id =info_to_json['data']['items']
+            get_a_id = info_to_json['data']['items']
             """ for u in get_a_id:
                 print(u) """
             return get_a_id
 
+import re
 @bot.command(name='get')
-async def gettttter(msg:Message,men_str:str):
-    if msg.author_id != master_id :
+async def gettttter(msg: Message, men_str: str):
+    if msg.author_id != master_id:
         return
     id_dict = await SGAI2(msg)
     stwqtr = men_str
-    result = re.match( '\(met\)(\d+?)\(met\)' , stwqtr)
+    result = re.match('\(met\)(\d+?)\(met\)', stwqtr)
     # print(result)
     # print(result.group(1))
     if result is None:
@@ -474,7 +485,7 @@ async def gettttter(msg:Message,men_str:str):
             glo_u = u
             break
     cm = CardMessage()
-    c1 = Card(Module.Header('LIST'),color=(await hex_random_color.get_random_hex_color()))
+    c1 = Card(Module.Header('LIST'), color=(await hex_random_color.get_random_hex_color()))
     c1.append(Module.Divider())
     str_id = "(spl){}(spl)".format(str(glo_u['id']))
     role_all_ids_1 = 0
@@ -487,102 +498,109 @@ async def gettttter(msg:Message,men_str:str):
     active_time = glo_u['active_time']
     when_join = datetime.fromtimestamp(int(joined_at) / 1000)
     last_active_1 = datetime.fromtimestamp(int(active_time) / 1000)
-    c1.append(Module.Section(Element.Text(f"🆔::\t{str_id}\nUsername::\t{glo_u['username']}\nNickname::\t{glo_u['nickname']}\nSuffix::\t{glo_u['identify_num']}\nAuthority::\t{role_f_all_ids}\nRole Color::\t{color_id1}\nLast active::\t{last_active_1}\nWhen joined::\t{when_join}",Types.Text.KMD)))
+    c1.append(Module.Section(Element.Text(
+        f"🆔::\t{str_id}\nUsername::\t{glo_u['username']}\nNickname::\t{glo_u['nickname']}\nSuffix::\t{glo_u['identify_num']}\nAuthority::\t{role_f_all_ids}\nRole Color::\t{color_id1}\nLast active::\t{last_active_1}\nWhen joined::\t{when_join}", Types.Text.KMD)))
     cm.append(c1)
     online_pd_true = '🟢'
     online_pd_false = '🔴'
     bot_pd_true = '🤖'
     bot_pd_false = '😀'
-    c2 = Card(Module.Header('Status'),color=(await hex_random_color.get_random_hex_color()))
+    c2 = Card(Module.Header('Status'), color=(await hex_random_color.get_random_hex_color()))
     c2.append(Module.Divider())
-    c2.append(Module.Section(Element.Text(f"Online status ==> {online_pd_true if glo_u['online'] else online_pd_false}\nKind ==> {bot_pd_true if glo_u['bot'] else bot_pd_false}\nMobile_verified ==> {online_pd_true if glo_u['mobile_verified'] else online_pd_false}\nIs_master ==> {online_pd_true if glo_u['is_master'] else online_pd_false}",Types.Text.KMD)))
+    c2.append(Module.Section(Element.Text(
+        f"Online status ==> {online_pd_true if glo_u['online'] else online_pd_false}\nKind ==> {bot_pd_true if glo_u['bot'] else bot_pd_false}\nMobile_verified ==> {online_pd_true if glo_u['mobile_verified'] else online_pd_false}\nIs_master ==> {online_pd_true if glo_u['is_master'] else online_pd_false}", Types.Text.KMD)))
     cm.append(c2)
-    c3 = Card(Module.Header('Other Messages'),color=(await hex_random_color.get_random_hex_color()))
+    c3 = Card(Module.Header('Other Messages'), color=(await hex_random_color.get_random_hex_color()))
     banner_pd = False
     # if len(glo_u['avatar']) > 0:
     #     c3.append(Module.Context('Avatar\t'))
     #     c3.append(Module.Divider())
     #     c3.append(Module.ImageGroup(Element.Image(src=glo_u['avatar'],size='mg')))
     #     c3.append(Module.Divider())
-    if len(glo_u['banner']) > 0 :
+    if len(glo_u['banner']) > 0:
         # c3.append(Module.Context('Banner\t'))
         # c3.append(Module.Divider())
         # c3.append(Module.ImageGroup(Element.Image(src=glo_u['banner'],size='lg')))
         banner_pd = True
         # c3.append(Module.Divider())
     if banner_pd:
-        c3.append(Module.ImageGroup(Element.Image(src=glo_u['banner'],size=Types.Size.LG),Element.Image(src=glo_u['avatar'],size=Types.Size.SM))) 
+        c3.append(Module.ImageGroup(Element.Image(src=glo_u['banner'], size=Types.Size.LG), Element.Image(
+            src=glo_u['avatar'], size=Types.Size.SM)))
     else:
-        c3.append(Module.ImageGroup(Element.Image(src=glo_u['avatar'],size=Types.Size.SM))) 
+        c3.append(Module.ImageGroup(Element.Image(
+            src=glo_u['avatar'], size=Types.Size.SM)))
     c3.append(Module.Divider())
     c3.append(Module.Context('banner and avatar'))
     cm.append(c3)
     await msg.reply(cm)
 
 
-#开黑啦的时间串的转换
-import re
+# 开黑啦的时间串的转换
 @bot.command(name='timeTL')
-async def timeTL(msg:Message,comment:str):
-    if msg.author_id != master_id :
+async def timeTL(msg: Message, comment: str):
+    if msg.author_id != master_id:
         return
     data = comment
-    result = re.match('^\d{1,}$',data)
+    result = re.match('^\d{1,}$', data)
     if result is None:
         return
     the_ans = datetime.fromtimestamp(int(data) / 1000)
     cm = CardMessage()
-    c1 = Card(Module.Context(f'结果：  {the_ans}'),color='62FF00')
+    c1 = Card(Module.Context(f'结果：  {the_ans}'), color='62FF00')
     cm.append(c1)
     await msg.reply(cm)
 
-#roll点模块
-import random
+# roll点模块
 @bot.command()
-async def roll(msg: Message, t_min: int, t_max: int , n: int = 1):
+async def roll(msg: Message, t_min: int, t_max: int, n: int = 1):
     result = [random.randint(t_min, t_max) for i in range(n)]
     await msg.reply(f'Result :  {result}')
 
 
-#爬虫 chrome 用的headers 
+# 爬虫 chrome 用的headers
 # import time
-from weather import *
 @bot.command(name='on99_home_weather')
-async def ohweather_in(msg:Message):
-    if msg.author_id != master_id :
+async def ohweather_in(msg: Message):
+    if msg.author_id != master_id:
         return
     # headers ={'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.5060.114 Safari/537.36 Edg/103.0.1264.62'}
     # url = 'https://api.open-meteo.com/v1/forecast?latitude=22.4938&longitude=113.4320&hourly=temperature_2m,relativehumidity_2m,apparent_temperature'
     now_hour = datetime.now().hour
-    weather_result_json  = await ohweather()
+    weather_result_json = await ohweather()
     cm = CardMessage()
-    c1 = Card(Module.Section(Element.Text(f"**温度:** {weather_result_json['hourly']['apparent_temperature'][now_hour%24]}",Types.Text.KMD)),
-    Module.Divider(),
-    Module.Section(Element.Text(f"**湿度:** {weather_result_json['hourly']['relativehumidity_2m'][now_hour%24]}",Types.Text.KMD)),
-    Module.Context('爬自国外网站，不准也正常'))
+    c1 = Card(Module.Section(Element.Text(f"**温度:** {weather_result_json['hourly']['apparent_temperature'][now_hour%24]}", Types.Text.KMD)),
+              Module.Divider(),
+              Module.Section(Element.Text(
+                  f"**湿度:** {weather_result_json['hourly']['relativehumidity_2m'][now_hour%24]}", Types.Text.KMD)),
+              Module.Context('爬自国外网站，不准也正常'))
 
     cm.append(c1)
     await msg.reply(cm)
 
+
 @bot.command()
-async def cat(msg:Message,chang:int,kuang:int):
-    url='https://placekitten.com/{chang}/{kuang}'.format(chang=chang,kuang=kuang)
+async def cat(msg: Message, chang: int, kuang: int):
+    url = 'https://placekitten.com/{chang}/{kuang}'.format(
+        chang=chang, kuang=kuang)
     cm = CardMessage()
     c1 = Card(Module.ImageGroup(Element.Image(src=url)))
     cm.append(c1)
     await msg.reply(cm)
 
 # url_random ='https://picsum.photos/400/400?random=1'
+
+
 @bot.command()
-async def random_pic(msg:Message,chang:int,kuang:int,random_index:int=2):
-    url='https://picsum.photos/{chang}/{kuang}?random={random_index}'.format(chang=chang,kuang=kuang,random_index=random_index)
+async def random_pic(msg: Message, chang: int, kuang: int, random_index: int = 2):
+    url = 'https://picsum.photos/{chang}/{kuang}?random={random_index}'.format(
+        chang=chang, kuang=kuang, random_index=random_index)
     cm = CardMessage()
     c1 = Card(Module.ImageGroup(Element.Image(src=url)))
     cm.append(c1)
     await msg.reply(cm)
 ################################################
-#https://img.kookapp.cn/assets/2022-07/dyThqVClf21hc0u0.jpg
-#D:\\DownLoad\\KoalaSleeping_ZH-CN8369657308_1920x1080.jpg
+# https://img.kookapp.cn/assets/2022-07/dyThqVClf21hc0u0.jpg
+# D:\\DownLoad\\KoalaSleeping_ZH-CN8369657308_1920x1080.jpg
 """ @bot.command(name = 'func_tip_1')
 async def ft_1():
     channel_url = await bot.create_asset('D:\\DownLoad\\KoalaSleeping_ZH-CN8369657308_1920x1080.jpg')
@@ -591,18 +609,20 @@ async def ft_1():
     await channel.send(channel_url,type=MessageTypes.IMG) """
 
 ###########每日新闻############
+
+import re
 @bot.command(name='today_news')
-async def tn1(msg:Message):
+async def tn1(msg: Message):
     url = "https://www.163.com/dy/media/T1603594732083.html"
     headers1 = {
         'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36'
     }
     cm = CardMessage()
-    c1 = Card(Module.Header('每日新闻'),color='f34543')
+    c1 = Card(Module.Header('每日新闻'), color='f34543')
     cm.append(c1)
     c2 = Card(color='f2fa56')
-    c3 = Card(Module.Context('消息来源：网易号资讯 内容作者:365资讯简报'),color='fe65a2')
+    c3 = Card(Module.Context('消息来源：网易号资讯 内容作者:365资讯简报'), color='fe65a2')
     # c1.append(Module.Divider())
     # rsq = requests.get(url,headers=headers)
     # # print(rsq)
@@ -614,20 +634,23 @@ async def tn1(msg:Message):
     # # print(hot)
     # news_list = re.findall('(?<=知晓天下事！<br/>).*(?=<br/></p><p class="f_center">)', hot)[0].split('<br/>')
     # msg = '\n'.join(news_list)
-    ####上面这段注释源码来自与52pojie网
+    # 上面这段注释源码来自与52pojie网
 
     async with aiohttp.ClientSession() as session:
-        async with session.get(url,headers=headers1) as response:
-            hot = await response.text('utf-8','ignore')
-            today_url = re.findall('https://www.163.com/dy/article/.*\.html', hot)[0]
-            async with session.get(today_url,headers=headers1) as response:
-                hot = await response.text('utf-8','ignore')
-                news_list = re.findall('(?<=知晓天下事！<br/>).*(?=<br/></p><p class="f_center">)', hot)[0].split('<br/>')
+        async with session.get(url, headers=headers1) as response:
+            hot = await response.text('utf-8', 'ignore')
+            today_url = re.findall(
+                'https://www.163.com/dy/article/.*\.html', hot)[0]
+            async with session.get(today_url, headers=headers1) as response:
+                hot = await response.text('utf-8', 'ignore')
+                news_list = re.findall(
+                    '(?<=知晓天下事！<br/>).*(?=<br/></p><p class="f_center">)', hot)[0].split('<br/>')
                 msg1 = '\n'.join(news_list)
-                n_size =len(news_list)
+                n_size = len(news_list)
                 # c2.append(Module.Section(Element.Text(f"{msg1}")))
                 # c2.append(Module.Section(f"{msg1}"))
-                c2.append(Module.Section(Element.Text(f"{msg1}",Types.Text.KMD)))
+                c2.append(Module.Section(
+                    Element.Text(f"{msg1}", Types.Text.KMD)))
                 cm.append(c2)
                 cm.append(c3)
                 await msg.ctx.channel.send(cm)
@@ -637,32 +660,55 @@ async def tn1(msg:Message):
                 # await msg.ctx.channel.send(f'{msg1}')
                 # await msg.reply(f'{msg}')
 
+
 ####################bing每日壁纸#####################
-import bing_today
 @bot.command(name='today_bing')
-async def tb1(msg:Message):
-    img_url,copyright_text,copyright_url = await bing_today.get_bing_everyday_pic()
+async def tb1(msg: Message):
+    img_url, copyright_text, copyright_url = await bing_today.get_bing_everyday_pic()
     cm = CardMessage()
-    c1 = Card(Module.Header('必应每日壁纸'),color='1fff7e')
+    c1 = Card(Module.Header('必应每日壁纸'), color='1fff7e')
     # c1.append(Module.Divider)
     """ c1.append(Module.Section(f'必应今日壁纸:{copyright_text}', Element.Button(
         'This way', f'{img_url}', Types.Click.LINK, theme=Types.Theme.INFO), RIGHT)) """
     # c3 = Card(Module.Context(f'{copyright_url}'),color='e87d3a')
     c2 = Card(Module.Section(f'必应今日壁纸:\n {copyright_text}', Element.Button(
-        'This way', img_url, Types.Click.LINK, theme=Types.Theme.INFO), RIGHT),color='e87d3a')
-    c3 = Card(Module.Context(f'copyright_url: \n {copyright_url}'),color='ba9af0')
+        'This way', img_url, Types.Click.LINK, theme=Types.Theme.INFO), RIGHT), color='e87d3a')
+    c3 = Card(Module.Context(
+        f'copyright_url: \n {copyright_url}'), color='ba9af0')
     c4 = Card(Module.File(Types.File.AUDIO, "http://music.163.com/song/media/outer/url?id=454231783.mp3",
-              title='Beneath the Mask -rain-', cover='http://p2.music.126.net/FmuZirfGmg9FbMy3hkEqAA==/109951165567176149.jpg?param=130y130'),color='ed173e')
+              title='Beneath the Mask -rain-', cover='http://p2.music.126.net/FmuZirfGmg9FbMy3hkEqAA==/109951165567176149.jpg?param=130y130'), color='ed173e')
     cm.append(c1)
     cm.append(c2)
     cm.append(c3)
     cm.append(c4)
     await msg.ctx.channel.send(cm)
 
-
-
-
-
+#################DNS DETECT#############################
+import re
+import Domain_Name_System_Detect
+@bot.command(name='DNS')
+async def DNS_detect_bot(msg:Message,the_url:str):
+    url = the_url
+    print(url)
+    what_result = re.split("[\[\]\(\)]", str(url))
+    if what_result is not None:
+        url = what_result[1]
+    cm = CardMessage()
+    result = await Domain_Name_System_Detect.DNS_Detect(url)
+    if result['code'] == 1:
+        the_msg = result['msg']
+        c1 = Card(Module.Header(f'Result:{the_msg}'),color=(await hex_random_color.get_random_hex_color()))
+        c1.append(Module.Divider())
+        c1.append(Module.Section(Element.Text(
+        f'URL::\n{result["url"]}', Types.Text.KMD)))
+        c1.append(Module.Divider())
+        c1.append(Module.Section(Element.Text(
+        f'Status\t==>\t {result["type"]}', Types.Text.KMD)))
+        cm.append(c1)
+    else:
+        c2 = Card(Module.Header(f'Result:{result["msg"]}'),color=(await hex_random_color.get_random_hex_color()))
+        cm.append(c2)
+    await msg.ctx.channel.send(cm)
 
 
 

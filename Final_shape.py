@@ -690,9 +690,10 @@ import Domain_Name_System_Detect
 async def DNS_detect_bot(msg:Message,the_url:str):
     url = the_url
     print(url)
-    what_result = re.split("[\[\]\(\)]", str(url))
-    if what_result is not None:
-        url = what_result[1]
+    if url.startswith('['):
+        what_result = re.split("[\[\]\(\)]", str(url))
+        if what_result is not None:
+            url = what_result[1]
     cm = CardMessage()
     result = await Domain_Name_System_Detect.DNS_Detect(url)
     if result['code'] == 1:

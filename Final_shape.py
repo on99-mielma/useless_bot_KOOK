@@ -1,3 +1,4 @@
+from yaml import KeyToken
 import bing_today
 from weather import *
 import random
@@ -711,7 +712,32 @@ async def DNS_detect_bot(msg:Message,the_url:str):
         cm.append(c2)
     await msg.ctx.channel.send(cm)
 
-
+#####################ip########################
+import re
+import IP_Detect
+@bot.command(name='ip')
+async def ip_detecttt(msg:Message,ip_url:str):
+    print(ip_url)
+    result = await IP_Detect.The_ip_Detect(ip_url)
+    cm = CardMessage()
+    keyword1 = result['notice']
+    the_re_result = re.search('(is\snot\sin\sthe\sdatabase)|(not\sappear\sto)',keyword1)
+    if the_re_result is not None:
+        c1 = Card(Module.Header(f'{keyword1}'),color=(await hex_random_color.get_random_hex_color()))
+        c1.append(Module.Divider())
+        c1.append(Module.Context(f'{result["provider"]}'))
+        cm.append(c1)
+        await msg.ctx.channel.send(cm)
+        return
+    
+    c1 = Card(Module.Header('>>Result<<'),color=(await hex_random_color.get_random_hex_color()))
+    the_xia = '⬇'
+    c2 = Card(Module.Section(Element.Text(f'IP ⬇⬇⬇⬇⬇\n**{result["ip"]}**\n\nCONTINENT ⬇⬇⬇⬇⬇\n**{result["continent"]}**\n\nPROVINCE ⬇⬇⬇⬇⬇\n**{result["province"]}**\n\nCITY ⬇⬇⬇⬇⬇\n**{result["city"]}**\n\nISP ⬇⬇⬇⬇⬇\n**{result["isp"]}**\n\nTIME ZONE ⬇⬇⬇⬇⬇\n**{result["time_zone"]}**\n\nLATITUDE AND LONGITUDE ⬇⬇⬇⬇⬇\n**{result["latitude"]}**\t**{result["longitude"]}**\n\n(spl)^^(spl)',Types.Text.KMD)),color=(await hex_random_color.get_random_hex_color()))
+    c2.append(Module.Divider())
+    c2.append(Module.Context(f'{result["provider"]}'))
+    cm.append(c1)
+    cm.append(c2)
+    await msg.ctx.channel.send(cm)
 
 
 logging.basicConfig(level='INFO')

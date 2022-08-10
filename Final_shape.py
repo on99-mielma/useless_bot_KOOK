@@ -640,12 +640,19 @@ async def tn1(msg: Message):
     async with aiohttp.ClientSession() as session:
         async with session.get(url, headers=headers1) as response:
             hot = await response.text('utf-8', 'ignore')
+            # print(hot)
+            # print("?#$%^#$%$#%$#%#$%$#%")
             today_url = re.findall(
                 'https://www.163.com/dy/article/.*\.html', hot)[0]
+            # print(today_url)
+            # print("?#$%^#$%$#%$#%#$%$#%")
             async with session.get(today_url, headers=headers1) as response:
                 hot = await response.text('utf-8', 'ignore')
-                news_list = re.findall(
-                    '(?<=知晓天下事！<br/>).*(?=<br/></p><p class="f_center">)', hot)[0].split('<br/>')
+                # with open('D:\\code\\kookbot\\kook_bot\\config\\debug.txt','w',encoding='utf-8') as f:
+                #     f.write(hot)
+                #     f.close()
+                # print(hot)
+                news_list = re.findall('(?<=知晓天下事！<br/>).*(?=</p><p class="f_center">)', hot)[0].split('<br/>')
                 msg1 = '\n'.join(news_list)
                 n_size = len(news_list)
                 # c2.append(Module.Section(Element.Text(f"{msg1}")))

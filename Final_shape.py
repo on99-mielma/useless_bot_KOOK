@@ -212,6 +212,14 @@ async def card(msg: Message):
     cm = CardMessage(c)  # Card can not be sent directly, need to wrapped with a CardMessage
     await msg.reply(cm) """
 
+##make some fun
+@bot.command(regex='^(on99)$')
+async def stuai(msg:Message, *args):
+    if msg.author_id != master_id:
+        return
+    print(args)
+    await msg.reply("我在")
+
 
 # 正则测试 是否能跳过prefix  测试结果：能
 @bot.command(regex='^(helpme)$')
@@ -694,7 +702,7 @@ async def tb1(msg: Message):
 #################DNS DETECT#############################
 import re
 import Domain_Name_System_Detect
-@bot.command(name='DNS')
+@bot.command(name='DNS',aliases=['dns'])
 async def DNS_detect_bot(msg:Message,the_url:str):
     url = the_url
     print(url)
@@ -722,7 +730,7 @@ async def DNS_detect_bot(msg:Message,the_url:str):
 #####################ip########################
 import re
 import IP_Detect
-@bot.command(name='ip')
+@bot.command(name='ip',aliases=['IP','Ip','iP'])
 async def ip_detecttt(msg:Message,ip_url:str):
     print(ip_url)
     result = await IP_Detect.The_ip_Detect(ip_url)

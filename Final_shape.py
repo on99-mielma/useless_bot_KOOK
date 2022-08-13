@@ -1,3 +1,6 @@
+from calendar import c
+from dataclasses import dataclass
+from pydoc import cli
 from yaml import KeyToken
 import bing_today
 from weather import *
@@ -263,37 +266,83 @@ async def help19(msg: Message, *args):
     await msg.reply(cm)
 
 # ActonGroup 实验到实践
-""" @bot.command()
-async def button_act(msg: Message):
+@bot.command(regex='(.|/|§){1}(choice){1}')
+async def button_act(msg: Message , *args):
+    if msg.author_id != master_id:
+        return
     await msg.reply(
         CardMessage(
             Card(
-                Module.Header('An example for button'),
+                Module.Header('NOW IT IS A CHOICE ABOUT REALITY OR LALALAND'),
                 Module.Context('Take a pill, take the choice'),
                 Module.ActionGroup(
                     # RETURN_VAL type(default): send an event when clicked, see print_btn_value() defined at L58
-                    Element.Button('Truth', 'RED', theme=Types.Theme.DANGER),
-                    Element.Button('Wonderland', 'BLUE', Types.Click.RETURN_VAL),
-                    Element.Button('exp','https://www.bilibili.com',Types.Click.LINK),
-                    Element.Button('exp2','https://www.bilibili.com',theme=Types.Theme.INFO)
+                    Element.Button('Truth',value='red',theme=Types.Theme.DANGER,click=Types.Click.RETURN_VAL),
+                    Element.Button('Wonderland',value='blue', theme=Types.Theme.INFO, click=Types.Click.RETURN_VAL)
+                    # Element.Button('exp','https://www.bilibili.com',Types.Click.LINK),
+                    # Element.Button('exp2','https://www.bilibili.com',theme=Types.Theme.INFO)
                     ),
                 Module.Divider(),
-                Module.Section(
-                    '好好学习吧哥们',
-                    # LINK type: user will open the link in browser when clicked
-                    Element.Button('link button', 'https://leetcode.cn/', Types.Click.LINK)))))
- """
+                Module.Context(Element.Text("好好学习吧 滚去[LeetCode](https://leetcode.cn/)",type=Types.Text.KMD)),color=(await hex_random_color.get_random_hex_color()))))
 
 
+from khl import api
 @bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
 async def help_rollback_hello(b: Bot, e: Event):
     print("以下为后台打印")
-    for key, value in e.body.items():
-        print('{key1}:{value1}'.format(key1=key, value1=value))
+    # for key, value in e.body.items():
+    #     print('{key1}:{value1}'.format(key1=key, value1=value))
+    print("/////")
+    print(e.extra)
+    the_value = str(e.extra['body']['value'])
+    if the_value in ['red' , 'blue','back']:
+        user_id = e.extra['body']['user_id']
+        channel_id = e.extra['body']['target_id']
+        msg_id = e.extra['body']['msg_id']
+        the_pic = e.extra['body']['user_info']['avatar']
+        await bot.client.gate.exec_req(api.Message.update(msg_id=msg_id,content=json.dumps(the_answer(the_value,the_pic))))
+        return
     channel = await b.fetch_public_channel(e.body['target_id'])
     button_value_info = e.body['value']
-    await b.send(channel, f'{button_value_info}')
+    await b.send(channel, f'{button_value_info}', temp_target_id=e.body['user_id'])
 
+from datetime import timedelta
+def the_answer(ans:str,url:str=None) -> CardMessage:
+    now_time = datetime.now()
+    delta = timedelta(seconds=20)
+    now_time = now_time + delta
+    cm = CardMessage()
+    if ans in ['red']:
+        c1 = Card(Module.Header("You choose the reality"),
+              Module.Divider(),
+              Module.Section(Element.Text("World will be destoried in under countdown",type=Types.Text.KMD),Element.Button('Re',value='back',theme=Types.Theme.PRIMARY,click=Types.Click.RETURN_VAL),mode=Types.SectionMode.RIGHT),
+              Module.Countdown(end=now_time,mode=Types.CountdownMode.SECOND),color=(hex_random_color.get_random_hex_color_no_await()))
+        cm.append(c1)
+        return cm
+    elif ans in ['blue']:
+        c1 = Card(Module.Header("You choose the lalaland"),
+              Module.Divider(),
+              Module.Section(Element.Text("There will be a sweet dream here for you",type=Types.Text.KMD),Element.Button('Re',value='back',theme=Types.Theme.PRIMARY,click=Types.Click.RETURN_VAL),mode=Types.SectionMode.RIGHT),color=(hex_random_color.get_random_hex_color_no_await()))
+        c2 = Card(Module.ImageGroup(Element.Image(src=url,size=Types.Size.LG)),color=(hex_random_color.get_random_hex_color_no_await()))
+        cm.append(c1)
+        cm.append(c2)
+        return cm
+    elif ans in ['back']:
+        cm = CardMessage(
+            Card(
+                Module.Header('NOW IT IS A CHOICE ABOUT REALITY OR LALALAND'),
+                Module.Context('Take a pill, take the choice'),
+                Module.ActionGroup(
+                    # RETURN_VAL type(default): send an event when clicked, see print_btn_value() defined at L58
+                    Element.Button('Truth',value='red',theme=Types.Theme.DANGER,click=Types.Click.RETURN_VAL),
+                    Element.Button('Wonderland',value='blue', theme=Types.Theme.INFO, click=Types.Click.RETURN_VAL)
+                    # Element.Button('exp','https://www.bilibili.com',Types.Click.LINK),
+                    # Element.Button('exp2','https://www.bilibili.com',theme=Types.Theme.INFO)
+                    ),
+                Module.Divider(),
+                Module.Context(Element.Text("好好学习吧 滚去[LeetCode](https://leetcode.cn/)",type=Types.Text.KMD)),color=(hex_random_color.get_random_hex_color_no_await())))
+        return cm
+    return cm
 #########################################################################
 
 ###############################################################
@@ -753,6 +802,8 @@ async def ip_detecttt(msg:Message,ip_url:str):
     cm.append(c1)
     cm.append(c2)
     await msg.ctx.channel.send(cm)
+
+########test update cardmessage######
 
 
 logging.basicConfig(level='INFO')

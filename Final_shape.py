@@ -50,13 +50,14 @@ async def startup_tasks():
 # 当前游戏状态修改
 @bot.command(name='fake_start_game')
 async def fsg(msg: Message):
+    print("?")
     if msg.author_id != master_id:
         return
-    games = await bot.list_game()
+    games = await bot.client.fetch_game_list()
     the_game = str(config['diy_game_o'])
     game = next(filter(lambda g: g.name == the_game, games), None)
     if game is None:
-        game = await bot.create_game(the_game)
+        game = await bot.client.register_game(the_game)
     await bot.client.update_playing_game(game)
 
 # 删除游戏状态
@@ -98,7 +99,7 @@ async def fstopsong(msg: Message):
 # /hello
 @bot.command(name='hello')
 async def hello_reply(msg: Message):
-    print(re.__file__)
+    # print(re.__file__)
     await msg.ctx.channel.send('hi! nice to see Ya!')
 
 # hi#

@@ -1,7 +1,7 @@
 import json
 import requests
 
-with open('D:\\code\\kookbot\\kook_bot\\config\\translate.json', 'r', encoding='utf-8') as f:
+with open('./config/translate.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
 
 

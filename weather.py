@@ -2,7 +2,7 @@ import aiohttp
 import json
 # import asyncio
 
-with open("D:\\code\\kookbot\\kook_bot\\config\\config.json", 'r', encoding='utf-8') as f:
+with open("./config/config.json", 'r', encoding='utf-8') as f:
     config = json.load(f)
 
 async def ohweather():

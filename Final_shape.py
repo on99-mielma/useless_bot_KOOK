@@ -1,5 +1,6 @@
 from calendar import c
 from dataclasses import dataclass
+import py_compile
 from pydoc import cli
 from yaml import KeyToken
 import bing_today
@@ -29,7 +30,7 @@ from translate import *
 import hex_random_color
 
 
-with open('D:\\code\\kookbot\\kook_bot\\config\\config.json', 'r', encoding='utf-8') as f:
+with open('./config/config.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
 
 master_id = config['master_id']

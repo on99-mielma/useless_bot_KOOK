@@ -528,16 +528,16 @@ async def SGAI2(msg: Message):
 
 import re
 @bot.command(name='get')
-async def gettttter(msg: Message, men_str: str):
+async def gettttter(msg: Message, *args):
     if msg.author_id != master_id:
         return
     id_dict = await SGAI2(msg)
-    stwqtr = men_str
-    result = re.match('\(met\)(\d+?)\(met\)', stwqtr)
+    stwqtr = "".join(args)
+    result = re.search('\(met\)(\d+?)\(met\)', stwqtr)
     # print(result)
     # print(result.group(1))
     if result is None:
-        await msg.reply('未检测到@行为')
+        await msg.reply('未检测到简洁干净的@行为')
         return
     finallllll_result = result.group(1)
     for u in id_dict:

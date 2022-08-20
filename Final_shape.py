@@ -798,7 +798,7 @@ async def ip_detecttt(msg:Message,ip_url:str):
     
     c1 = Card(Module.Header('>>Result<<'),color=(await hex_random_color.get_random_hex_color()))
     the_xia = '⬇'
-    c2 = Card(Module.Section(Element.Text(f'IP ⬇⬇⬇⬇⬇\n**{result["ip"]}**\n\nCONTINENT ⬇⬇⬇⬇⬇\n**{result["continent"]}**\n\nPROVINCE ⬇⬇⬇⬇⬇\n**{result["province"]}**\n\nCITY ⬇⬇⬇⬇⬇\n**{result["city"]}**\n\nISP ⬇⬇⬇⬇⬇\n**{result["isp"]}**\n\nTIME ZONE ⬇⬇⬇⬇⬇\n**{result["time_zone"]}**\n\nLATITUDE AND LONGITUDE ⬇⬇⬇⬇⬇\n**{result["latitude"]}**\t**{result["longitude"]}**\n\n(spl)^^(spl)',text_type=Types.Text.KMD)),color=(await hex_random_color.get_random_hex_color()))
+    c2 = Card(Module.Section(Element.Text(f'IP ⬇⬇⬇⬇⬇\n**{result["ip"]}**\n\nCONTINENT ⬇⬇⬇⬇⬇\n**{result["continent"]}**\n\nPROVINCE ⬇⬇⬇⬇⬇\n**{result["province"]}**\n\nCITY ⬇⬇⬇⬇⬇\n**{result["city"]}**\n\nISP ⬇⬇⬇⬇⬇\n**{result["isp"]}**\n\nTIME ZONE ⬇⬇⬇⬇⬇\n**{result["time_zone"]}**\n\nLATITUDE AND LONGITUDE ⬇⬇⬇⬇⬇\n**{result["latitude"]}**\t\t\t\t\t\t**{result["longitude"]}**\n\n(spl)^^(spl)',text_type=Types.Text.KMD)),color=(await hex_random_color.get_random_hex_color()))
     c2.append(Module.Divider())
     c2.append(Module.Context(f'{result["provider"]}'))
     cm.append(c1)
